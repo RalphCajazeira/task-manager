@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* Pasta de entrada/saída */
+    "rootDir": "src",
+    "outDir": "dist",
+
+    /* Alvo e módulos (ESM no Node atual) */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    /* Ambiente e types */
+    "lib": ["ES2023"],
+    "types": ["node"],
+
+    /* Qualidade de tipos */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Execução/build */
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "sourceMap": true,
+
+    /* Compat para imports default (ex.: express) */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Alias @/ */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src"]
+}
