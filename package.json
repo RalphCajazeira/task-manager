@@ -1,0 +1,9 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Ralph Ramos",
+  "license": "ISC",
+  "description": "API para agendamento de tarefas"
+}
