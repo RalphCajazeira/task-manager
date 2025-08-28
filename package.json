@@ -12,7 +12,8 @@
   "license": "ISC",
   "description": "API para agendamento de tarefas",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.1.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
