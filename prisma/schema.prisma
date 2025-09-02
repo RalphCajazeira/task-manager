@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UsersRole {
+  admin
+  member
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+}
+
+enum TaskPriority {
+  high
+  medium
+  low
+}
+
+model User {
+  id        Int @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role UsersRole @default(member)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+ // Relacionamentos
+  memberships TeamMember[]                 // User 1:N TeamMember
+  tasks       Task[]       @relation("AssignedTasks") // User 1:N Task (assigned)
+  
+
+  @@map("users")
+}
+
+model Team{
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  members TeamMember[]  // Team 1:N TeamMember
+  tasks   Task[]        // Team 1:N Task
+
+  @@map("teams")
+}
+
+model TeamMember {
+  id Int @id @default(autoincrement())
+  userId Int
+  teamId Int
+  createdAt DateTime @default(now())
+
+
+  // FKs explícitas
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, teamId]) // evita duplicar membro no mesmo time
+
+
+  @@map("team_members")
+}
+
+model Task {
+  id Int @id @default(autoincrement())
+  title String
+  description String?
+  status TaskStatus @default(pending)
+  priority TaskPriority @default(medium)
+  assignedTo Int?
+  teamId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  // FKs explícitas
+  assignedUser User? @relation("AssignedTasks", fields: [assignedTo], references: [id], onDelete: SetNull)
+  team         Team  @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  // Índices úteis p/ filtros
+  @@index([status])
+  @@index([priority])
+  @@index([teamId])
+  @@index([assignedTo])
+
+  @@map("tasks")
+}
