@@ -36,6 +36,32 @@ class UserController {
 
     return response.json(userWithoutPassword);
   }
+
+  async show(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int().positive(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new AppError("User not found.", 404);
+    }
+
+    return response.json({ data: user });
+  }
 }
 
 export { UserController };
