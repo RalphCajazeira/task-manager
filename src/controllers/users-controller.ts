@@ -37,6 +37,21 @@ class UserController {
     return response.json({ data: userWithoutPassword });
   }
 
+  async index(request: Request, response: Response) {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return response.json({ data: users });
+  }
+
   async show(request: Request, response: Response) {
     const paramsSchema = z.object({
       id: z.coerce.number().int().positive(),
@@ -61,6 +76,21 @@ class UserController {
     }
 
     return response.json({ data: user });
+  }
+
+  async update(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      id: z.coerce.number().int().positive(),
+    });
+
+    const bodySchema = z.object({
+      name: z.string().trim().min(2).optional(),
+      email: z.email().optional(),
+      password: z.string().trim().min(6).optional(),
+    });
+
+    const { id } = paramsSchema.parse(request.params);
+    const { name, email, password } = bodySchema.parse(request.body);
   }
 }
 
